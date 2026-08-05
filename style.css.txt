@@ -1,0 +1,49 @@
+Set-Content -Path style.css -Value @"
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+header {
+    background: #1e3d59;
+    color: #fff;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+section {
+    background: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: #17b978;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 0.9rem;
+}
+"@
+
