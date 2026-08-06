@@ -132,5 +132,14 @@ footer {
     resize: vertical;
     height: 100px;
 }
+/* Keep form hidden by default until toggled */
+.contact-form-wrapper {
+    display: none;
+}
+
+.contact-form-wrapper.active {
+    display: block;
+}
+
 
 
