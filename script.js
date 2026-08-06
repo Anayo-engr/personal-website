@@ -1,0 +1,32 @@
+// Function to toggle the form visibility when the button/icon is clicked
+function toggleContactForm() {
+    const formWrapper = document.getElementById('contactFormWrapper');
+    formWrapper.classList.toggle('active');
+}
+
+// Function to handle the online submission action
+function submitContactForm(event) {
+    event.preventDefault(); // Prevents page reload
+    
+    // Collect form data values matching your layout
+    const formData = {
+        surname: document.getElementById('surname').value,
+        othernames: document.getElementById('othernames').value,
+        phone: document.getElementById('phone').value,
+        gender: document.getElementById('gender').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        postal: document.getElementById('postal').value,
+        comment: document.getElementById('comment').value
+    };
+
+    console.log("Form Submitted:", formData);
+    alert("Thank you! Your contact form has been submitted successfully.");
+    
+    // Reset the form and hide it again after submission
+    document.getElementById('clientContactForm').reset();
+    document.getElementById('contactFormWrapper').classList.remove('active');
+}
+
