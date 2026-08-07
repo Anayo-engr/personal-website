@@ -344,7 +344,132 @@
                     <div class="gallery-box">[ Construction Drawing 1 ]</div>
                     <div class="gallery-box">[ Site Image 2 ]</div>
                  </div>
-                
+<style>
+/* --- Software Dashboard Styles --- */
+.dashboard-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    margin: 40px auto;
+    max-width: 1100px;
+    color: #2d3748;
+    text-align: left;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f4f7f6;
+    padding-bottom: 15px;
+}
+
+.dashboard-header h3 {
+    font-size: 1.25rem;
+    color: #1a365d;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-badge {
+    background: #e2e8f0;
+    color: #2d3748;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.metric-title {
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    color: #1a365d;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+.metric-trend {
+    font-size: 0.75rem;
+    color: #38a169;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.dashboard-workspace {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+.workspace-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.workspace-panel h4 {
+    font-size: 0.95rem;
+    color: #2d3748;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-item {
+    font-size: 0.85rem;
+    padding: 8px 0;
+    border-bottom: 1px solid #edf2f7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #38a169;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+</style>
             <section class="dashboard-container">
                 <div class="dashboard-header">
                     <h3>System & Code Analytics Workspace</h3>
