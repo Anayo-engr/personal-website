@@ -358,6 +358,121 @@ footer {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* Final Clean Client Contact Form Styling */
+.contact-section {
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: left;
+}
+
+.contact-toggle-btn {
+    background: none;
+    color: #ffffff;
+    border: 2px solid #d4af37;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.contact-toggle-btn:hover {
+    background-color: rgba(212, 175, 55, 0.1);
+}
+
+.contact-form-hidden {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.client-form h3 {
+    display: none;
+}
+
+.client-form .form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.client-form .form-group {
+    flex: 1;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.client-form label {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #e0e0e0;
+}
+
+.client-form input,
+.client-form select {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Borderless Comment Area */
+.client-form textarea {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 0;
+    color: #ffffff;
+    font-size: 14px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.client-form input:focus,
+.client-form select:focus {
+    border-color: #d4af37;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.client-form textarea:focus {
+    border-bottom: 2px solid #d4af37;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.submit-btn {
+    background-color: #d4af37;
+    color: #1a2a3a;
+    border: none;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 5px;
+}
+
+.submit-btn:hover {
+    background-color: #c19b2e;
+}
+
 
 
 
