@@ -1,13 +1,13 @@
-// Toggle Client Contact Form Visibility
+
 function toggleContactForm() {
-    const formContainer = document.getElementById('contactFormContainer');
-    const toggleIcon = document.getElementById('toggle-icon');
+    const container = document.getElementById('contactFormContainer');
+    const icon = document.getElementById('toggle-icon');
     
-    if (formContainer.style.display === 'block') {
-        formContainer.style.display = 'none';
-        toggleIcon.textContent = '+';
+    if (container.style.display === 'none' || container.style.display === '') {
+        container.style.display = 'block';
+        icon.textContent = '-';
     } else {
-        formContainer.style.display = 'block';
-        toggleIcon.textContent = '-';
+        container.style.display = 'none';
+        icon.textContent = '+';
     }
-}   
+}
