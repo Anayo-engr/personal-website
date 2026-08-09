@@ -483,6 +483,14 @@ footer {
 .submit-btn:hover {
     background-color: #c19b2e;
 }
+.card p, 
+.card span, 
+.card li,
+.card h2,
+.card h3 {
+    color: #1a2a3a !important;
+    opacity: 1 !important;
+}
 
 
 
