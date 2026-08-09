@@ -483,11 +483,12 @@ footer {
 .submit-btn:hover {
     background-color: #c19b2e;
 }
-section p, 
-section span, 
-section li, 
-section h2, 
-section h3 {
+.about-card p, 
+.about-card span, 
+.services-card p, 
+.services-card span, 
+.about-content p, 
+.services-content p {
     color: #1a2a3a !important;
     opacity: 1 !important;
 }
