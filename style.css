@@ -358,9 +358,10 @@ footer {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
 /* Final Collapsible Contact Form Styling */
 .contact-section {
-    margin: 25px auto;
+    margin: 50px auto 25px auto;
     width: 90%;
     max-width: 600px;
     text-align: center;
