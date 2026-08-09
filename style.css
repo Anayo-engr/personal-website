@@ -483,8 +483,7 @@ footer {
 .submit-btn:hover {
     background-color: #c19b2e;
 }
-div p, div span, article p, article span {
-    color: #1a2a3a !important;
+.card, .about-card, .services-card, .about-section, .services-section {
     opacity: 1 !important;
 }
 
