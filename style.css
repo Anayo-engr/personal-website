@@ -483,8 +483,72 @@ footer {
 .submit-btn:hover {
     background-color: #c19b2e;
 }
-.card, .about-card, .services-card, .about-section, .services-section {
+/* ==============================
+   FIX: ABOUT ME & SERVICES TEXT
+   ============================== */
+
+/* About Me and Services sections & cards */
+#about,
+#services,
+.about,
+.services,
+.about-section,
+.services-section,
+.card {
     opacity: 1 !important;
+    filter: none !important;
+    color: #111827 !important;
+}
+
+/* Section headings */
+#about h2,
+#about h3,
+#services h2,
+#services h3,
+.card h2,
+.card h3 {
+    color: #0f172a !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: none !important;
+}
+
+/* Paragraphs and other text */
+#about p,
+#about li,
+#services p,
+#services li,
+.card p,
+.card li,
+.card span {
+    color: #1f2937 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Service cards */
+#services .service-card,
+#services .card,
+.about-card,
+.services-card {
+    opacity: 1 !important;
+    color: #1f2937 !important;
+    background: #ffffff !important;
+}
+
+/* Make links clearly visible */
+#about a,
+#services a,
+.card a {
+    color: #2563eb !important;
+    opacity: 1 !important;
+}
+
+/* Prevent parent elements from making text transparent */
+#about *,
+#services *,
+.card * {
+    text-shadow: none;
 }
 
 
