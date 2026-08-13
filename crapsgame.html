@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craps Game - Engr. Anayo Portfolio</title>
+    <!-- Link to your game stylesheet -->
+    <link rel="stylesheet" href="crapsgame.css">
+    <!-- Link to your main site styles if you want header/nav consistency -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">← Back to Portfolio</a>
+        </div>
+    </header>
+
+    <!-- Main Game Section -->
+    <main>
+        <section class="craps-game" id="craps-game">
+
+            <div class="craps-header">
+                <h2>🎲 Craps: Even or Odd</h2>
+                <p>
+                    Predict whether the total of two dice will be
+                    EVEN or ODD.
+                </p>
+            </div>
+
+            <!-- Balance -->
+            <div class="craps-bankroll">
+                <span>Game Balance</span>
+                <strong id="craps-balance">$1,000</strong>
+            </div>
+
+            <!-- Status -->
+            <div class="craps-game-status" id="craps-status">
+                Choose EVEN or ODD, then roll the dice.
+            </div>
+
+            <!-- Dice -->
+            <div class="craps-dice-area">
+
+                <div class="craps-die-wrapper">
+                    <div class="craps-die" id="craps-die-1">
+                        <div class="die-face front">1</div>
+                        <div class="die-face back">6</div>
+                        <div class="die-face right">3</div>
+                        <div class="die-face left">4</div>
+                        <div class="die-face top">5</div>
+                        <div class="die-face bottom">2</div>
+                    </div>
+                </div>
+
+                <div class="craps-plus">+</div>
+
+                <div class="craps-die-wrapper">
+                    <div class="craps-die" id="craps-die-2">
+                        <div class="die-face front">1</div>
+                        <div class="die-face back">6</div>
+                        <div class="die-face right">3</div>
+                        <div class="die-face left">4</div>
+                        <div class="die-face top">5</div>
+                        <div class="die-face bottom">2</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Total -->
+            <div class="craps-result">
+                <span>Dice Total</span>
+                <strong id="craps-total">—</strong>
+            </div>
+
+            <!-- Betting -->
+            <div class="craps-bet-section">
+                <h3>Place Your Bet</h3>
+                <div class="craps-bet-amount">
+                    Bet Amount:
+                    <strong>$100</strong>
+                </div>
+
+                <!-- EVEN / ODD -->
+                <div class="craps-choice-buttons">
+                    <button type="button" class="craps-choice" id="craps-even-btn" data-choice="even">
+                        EVEN
+                    </button>
+                    <button type="button" class="craps-choice" id="craps-odd-btn" data-choice="odd">
+                        ODD
+                    </button>
+                </div>
+
+                <!-- Roll -->
+                <button type="button" id="craps-roll-btn" class="craps-roll-button">
+                    🎲 Roll Dice
+                </button>
+
+                <!-- Exit -->
+                <button type="button" id="craps-exit-btn" class="craps-exit-button">
+                    Exit Game
+                </button>
+            </div>
+
+            <!-- Result message -->
+            <div class="craps-message" id="craps-message"></div>
+
+            <!-- History -->
+            <div class="craps-history-container">
+                <h3>Game History</h3>
+                <div id="craps-history" class="craps-history">
+                    <p class="craps-empty-history">
+                        No rounds played yet.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Link to your game script -->
+    <script src="crapsgame.js"></script>
+</body>
+</html>
