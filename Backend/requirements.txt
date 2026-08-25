@@ -1,1 +1,6 @@
-
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic[email]
+python-jose[cryptography]
+pwdlib[argon2]
