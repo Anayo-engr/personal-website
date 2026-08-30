@@ -2,52 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Admin Dashboard | Personal Website</title>
 
-    <link rel="stylesheet" href="admin.css">
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
 </head>
 
 <body>
 
-<header class="admin-header">
-    <div class="admin-header-content">
-        <h1>Admin Dashboard</h1>
+    <!-- =====================================================
+         ADMIN HEADER
+    ====================================================== -->
 
-        <button id="logoutButton" type="button">
-            Logout
-        </button>
-    </div>
-</header>
+    <header class="admin-header">
 
-<main class="admin-dashboard">
+        <div class="admin-header-content">
 
-    <section class="dashboard-welcome">
-        <h2>Welcome, Administrator</h2>
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Personal Website Administration</p>
+            </div>
 
-        <p>
-            You are successfully logged in to the personal website
-            administration area.
-        </p>
-    </section>
+            <button
+                id="logoutButton"
+                type="button"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
 
 
-    <section class="dashboard-card">
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
 
-        <h2>Client Inquiries</h2>
+    <main class="admin-dashboard">
 
-        <p id="dashboardMessage">
-            Loading inquiries...
-        </p>
+        <!-- Welcome Section -->
 
-        <div id="inquiriesContainer"></div>
+        <section class="dashboard-welcome">
 
-    </section>
+            <h2>Welcome, Administrator</h2>
 
-</main>
+            <p>
+                You are successfully logged in to the
+                personal website administration area.
+            </p>
 
-<script src="admin-dashboard.js"></script>
+        </section>
+
+
+        <!-- Client Inquiries -->
+
+        <section class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <h2>Client Inquiries</h2>
+
+                    <p id="dashboardMessage">
+                        Loading inquiries...
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!--
+                JavaScript will automatically insert
+                the dashboard summary here.
+            -->
+
+
+            <div id="inquiriesContainer">
+
+                <p>
+                    Loading client inquiries...
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         ADMIN DASHBOARD JAVASCRIPT
+    ====================================================== -->
+
+    <script src="admin-dashboard.js"></script>
 
 </body>
 </html>
