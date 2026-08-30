@@ -6,49 +6,13 @@
  * ==========================================
  */
 
-function toggleContactForm() {
-    const container = document.getElementById("contactFormContainer");
-    const button = document.querySelector(".contact-toggle-btn");
-    const icon = document.getElementById("toggle-icon");
-
-    if (!container) {
-        console.error("Contact form container not found.");
-        return;
-    }
-
-    const isCurrentlyHidden = container.hidden;
-
-    if (isCurrentlyHidden) {
-        /*
-         * OPEN THE FORM
-         */
-        container.hidden = false;
-        container.style.display = "";
-
-        if (button) {
-            button.setAttribute("aria-expanded", "true");
-        }
-
-        if (icon) {
-            icon.textContent = "−";
-        }
-
-    } else {
-        /*
-         * CLOSE THE FORM
-         */
-        container.hidden = true;
-        container.style.display = "none";
-
-        if (button) {
-            button.setAttribute("aria-expanded", "false");
-        }
-
-        if (icon) {
-            icon.textContent = "+";
-        }
-    }
-}
+/*
+ * LIVE RENDER BACKEND
+ *
+ * Replace this URL with the actual Render
+ * backend URL when confirmed.
+ */
+const API_BASE_URL = "YOUR_RENDER_BACKEND_URL";
 
 
 /*
@@ -62,33 +26,89 @@ document.addEventListener("DOMContentLoaded", () => {
     const container =
         document.getElementById("contactFormContainer");
 
-    const button =
-        document.querySelector(".contact-toggle-btn");
+    const toggleButton =
+        document.getElementById("contactToggleBtn");
 
-    const icon =
+    const toggleIcon =
         document.getElementById("toggle-icon");
+
+    const contactForm =
+        document.getElementById("client-contact-form");
 
 
     /*
      * ==========================================
      * INITIAL FORM STATE
      * ==========================================
-     *
-     * Keep the contact form CLOSED when
-     * the website first loads.
      */
 
     if (container) {
         container.hidden = true;
-        container.style.display = "none";
     }
 
-    if (button) {
-        button.setAttribute("aria-expanded", "false");
+    if (toggleButton) {
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
     }
 
-    if (icon) {
-        icon.textContent = "+";
+    if (toggleIcon) {
+        toggleIcon.textContent = "+";
+    }
+
+
+    /*
+     * ==========================================
+     * OPEN / CLOSE CONTACT FORM
+     * ==========================================
+     */
+
+    if (toggleButton && container) {
+
+        toggleButton.addEventListener(
+            "click",
+            () => {
+
+                const isClosed =
+                    container.hidden;
+
+                if (isClosed) {
+
+                    /*
+                     * OPEN
+                     */
+
+                    container.hidden = false;
+
+                    toggleButton.setAttribute(
+                        "aria-expanded",
+                        "true"
+                    );
+
+                    if (toggleIcon) {
+                        toggleIcon.textContent = "−";
+                    }
+
+                } else {
+
+                    /*
+                     * CLOSE
+                     */
+
+                    container.hidden = true;
+
+                    toggleButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                    if (toggleIcon) {
+                        toggleIcon.textContent = "+";
+                    }
+                }
+            }
+        );
     }
 
 
@@ -98,281 +118,252 @@ document.addEventListener("DOMContentLoaded", () => {
      * ==========================================
      */
 
-    const contactForm =
-        document.querySelector("#client-contact form");
-
     if (!contactForm) {
+        console.error(
+            "Client contact form not found."
+        );
+
         return;
     }
 
 
-    contactForm.addEventListener("submit", async (event) => {
+    contactForm.addEventListener(
+        "submit",
+        async (event) => {
 
-        event.preventDefault();
-
-
-        /*
-         * Get the submit button
-         */
-
-        const submitButton =
-            contactForm.querySelector('button[type="submit"]');
-
-
-        /*
-         * Prevent multiple submissions
-         */
-
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.textContent = "Sending...";
-        }
-
-
-        /*
-         * Collect form information
-         */
-
-        const formData =
-            new FormData(contactForm);
-
-
-        /*
-         * ==========================================
-         * DATA SENT TO FASTAPI
-         * ==========================================
-         */
-
-        const inquiryData = {
-
-            surname:
-                formData.get("surname"),
-
-            othernames:
-                formData.get("othernames"),
-
-            email:
-                formData.get("email"),
-
-            phone:
-                formData.get("phone"),
-
-            project_type:
-                formData.get("project_type"),
-
-            location:
-                formData.get("location"),
-
-            budget:
-                formData.get("budget"),
-
-            timeline:
-                formData.get("timeline"),
-
-            comments:
-                formData.get("comments")
-        };
-
-
-        /*
-         * ==========================================
-         * SEND INQUIRY TO BACKEND
-         * ==========================================
-         */
-
-        try {
-
-            const response = await fetch(
-                "http://127.0.0.1:8001/inquiries",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body:
-                        JSON.stringify(inquiryData)
-                }
-            );
+            event.preventDefault();
 
 
             /*
-             * Try to read the API response
+             * Get submit button
              */
 
-            let result = {};
-
-            try {
-
-                result = await response.json();
-
-            } catch (jsonError) {
-
-                result = {};
-            }
+            const submitButton =
+                contactForm.querySelector(
+                    'button[type="submit"]'
+                );
 
 
             /*
-             * Debug information
-             */
-
-            console.log(
-                "API RESPONSE:",
-                result
-            );
-
-
-            /*
-             * ==========================================
-             * HANDLE API ERROR
-             * ==========================================
-             */
-
-            if (!response.ok) {
-
-                let errorMessage =
-                    "Unable to send your message.";
-
-
-                if (
-                    typeof result.detail === "string"
-                ) {
-
-                    errorMessage =
-                        result.detail;
-
-                } else if (
-                    Array.isArray(result.detail)
-                ) {
-
-                    errorMessage =
-                        result.detail
-                            .map(error => error.msg)
-                            .join(", ");
-
-                } else if (
-                    result.message
-                ) {
-
-                    errorMessage =
-                        result.message;
-                }
-
-
-                throw new Error(errorMessage);
-            }
-
-
-            /*
-             * ==========================================
-             * SUCCESS
-             * ==========================================
-             */
-
-            alert(
-                "Thank you! Your project inquiry has been sent successfully."
-            );
-
-
-            /*
-             * Clear the form
-             */
-
-            contactForm.reset();
-
-
-        } catch (error) {
-
-            /*
-             * ==========================================
-             * ERROR
-             * ==========================================
-             */
-
-            console.error(
-                "Contact form error:",
-                error
-            );
-
-
-            alert(
-                error.message ||
-                "Sorry, your message could not be sent. Please try again."
-            );
-
-
-        } finally {
-
-            /*
-             * ==========================================
-             * RESTORE SUBMIT BUTTON
-             * ==========================================
+             * Prevent multiple submissions
              */
 
             if (submitButton) {
-
-                submitButton.disabled = false;
-
+                submitButton.disabled = true;
                 submitButton.textContent =
-                    "Send Message";
+                    "Sending...";
+            }
+
+
+            /*
+             * Collect form data
+             */
+
+            const formData =
+                new FormData(contactForm);
+
+
+            const inquiryData = {
+
+                surname:
+                    formData.get("surname"),
+
+                othernames:
+                    formData.get("othernames"),
+
+                email:
+                    formData.get("email"),
+
+                phone:
+                    formData.get("phone"),
+
+                project_type:
+                    formData.get("project_type"),
+
+                location:
+                    formData.get("location"),
+
+                budget:
+                    formData.get("budget"),
+
+                timeline:
+                    formData.get("timeline"),
+
+                comments:
+                    formData.get("comments")
+            };
+
+
+            /*
+             * ==========================================
+             * SEND TO RENDER BACKEND
+             * ==========================================
+             */
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/inquiries`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    inquiryData
+                                )
+                        }
+                    );
+
+
+                /*
+                 * Read response
+                 */
+
+                let result = {};
+
+                try {
+
+                    result =
+                        await response.json();
+
+                } catch (jsonError) {
+
+                    result = {};
+                }
+
+
+                console.log(
+                    "API RESPONSE:",
+                    result
+                );
+
+
+                /*
+                 * ==========================================
+                 * HANDLE ERROR
+                 * ==========================================
+                 */
+
+                if (!response.ok) {
+
+                    let errorMessage =
+                        "Unable to send your message.";
+
+
+                    if (
+                        typeof result.detail ===
+                        "string"
+                    ) {
+
+                        errorMessage =
+                            result.detail;
+
+                    } else if (
+                        Array.isArray(
+                            result.detail
+                        )
+                    ) {
+
+                        errorMessage =
+                            result.detail
+                                .map(
+                                    error =>
+                                        error.msg
+                                )
+                                .join(", ");
+
+                    } else if (
+                        result.message
+                    ) {
+
+                        errorMessage =
+                            result.message;
+                    }
+
+
+                    throw new Error(
+                        errorMessage
+                    );
+                }
+
+
+                /*
+                 * ==========================================
+                 * SUCCESS
+                 * ==========================================
+                 */
+
+                alert(
+                    "Thank you! Your project inquiry has been sent successfully."
+                );
+
+
+                /*
+                 * Clear form
+                 */
+
+                contactForm.reset();
+
+
+                /*
+                 * Close form after successful submission
+                 */
+
+                if (container) {
+
+                    container.hidden = true;
+                }
+
+                if (toggleButton) {
+
+                    toggleButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+                }
+
+                if (toggleIcon) {
+
+                    toggleIcon.textContent = "+";
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Contact form error:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Sorry, your message could not be sent. Please try again."
+                );
+
+
+            } finally {
+
+                /*
+                 * Restore submit button
+                 */
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        "Send Message";
+                }
             }
         }
-
-    });
-
-});
-
-
-
-/* =========================================================
-   CONTACT FORM TOGGLE
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const toggleButton = document.getElementById("contactToggleBtn");
-    const contactFormContainer = document.getElementById("contactFormContainer");
-    const toggleIcon = document.getElementById("toggle-icon");
-
-    if (!toggleButton || !contactFormContainer) {
-        console.error("Contact form toggle elements not found.");
-        return;
-    }
-
-    // Start closed
-    contactFormContainer.setAttribute("hidden", "");
-
-    toggleButton.setAttribute("aria-expanded", "false");
-
-    if (toggleIcon) {
-        toggleIcon.textContent = "+";
-    }
-
-    // Toggle form
-    toggleButton.addEventListener("click", () => {
-
-        const isClosed = contactFormContainer.hasAttribute("hidden");
-
-        if (isClosed) {
-            // OPEN
-            contactFormContainer.removeAttribute("hidden");
-            toggleButton.setAttribute("aria-expanded", "true");
-
-            if (toggleIcon) {
-                toggleIcon.textContent = "−";
-            }
-
-        } else {
-            // CLOSE
-            contactFormContainer.setAttribute("hidden", "");
-            toggleButton.setAttribute("aria-expanded", "false");
-
-            if (toggleIcon) {
-                toggleIcon.textContent = "+";
-            }
-        }
-
-    });
+    );
 
 });

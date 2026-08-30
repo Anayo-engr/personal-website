@@ -1539,6 +1539,3 @@ footer p:last-child {
 #contactFormContainer[hidden] {
     display: none !important;
 }
-#contactFormContainer :not([hidden]) {
-    display: block !important;
-}
