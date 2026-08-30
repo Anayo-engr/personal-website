@@ -360,7 +360,7 @@ textarea {
 ========================================================= */
 
 .contact-section {
-    width: min(100% - 32px, 850px);
+    width: min(100% - 32px, 850px); 
 
     margin:
         -25px auto
@@ -434,7 +434,7 @@ textarea {
 }
 
 .contact-form-hidden[hidden] {
-    display: none;
+    display: none !important;
 }
 
 .contact-form-header {
@@ -1531,4 +1531,14 @@ footer p:last-child {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* =========================================================
+   CONTACT FORM VISIBILITY
+========================================================= */
+#contactFormContainer[hidden] {
+    display: none !important;
+}
+#contactFormContainer :not([hidden]) {
+    display: block !important;
 }

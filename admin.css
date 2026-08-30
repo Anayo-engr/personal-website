@@ -1,0 +1,726 @@
+/* =========================================================
+   ADMIN GLOBAL STYLES
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary: #162f50;
+    --primary-dark: #0e223a;
+    --primary-light: #24486f;
+    --accent: #d4a12c;
+    --accent-light: #e6bd55;
+
+    --background: #f1f5f9;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #dce3e9;
+
+    --success: #299b62;
+    --danger: #dc3545;
+
+    --shadow-sm:
+        0 3px 10px rgba(20, 42, 66, 0.07);
+
+    --shadow-md:
+        0 8px 24px rgba(20, 42, 66, 0.10);
+
+    --shadow-lg:
+        0 16px 40px rgba(20, 42, 66, 0.12);
+
+    --radius: 12px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   LOGIN PAGE
+========================================================= */
+
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+
+    background: var(--surface);
+
+    padding: 40px;
+
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-lg);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: var(--primary);
+}
+
+.login-header p {
+    color: var(--text-light);
+    font-size: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: 600;
+
+    color: #334155;
+}
+
+.form-group input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border:
+        1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: var(--text);
+}
+
+.form-group input:focus {
+    border-color: var(--accent);
+
+    box-shadow:
+        0 0 0 3px rgba(212, 161, 44, 0.15);
+}
+
+#loginButton {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+#loginButton:hover {
+    background: var(--primary-light);
+
+    transform: translateY(-1px);
+}
+
+#loginButton:disabled {
+    opacity: 0.7;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+.login-message {
+    margin-top: 15px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ADMIN HEADER
+========================================================= */
+
+.admin-header {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 15px rgba(0, 0, 0, 0.15);
+}
+
+.admin-header-content {
+    width: min(100% - 32px, 1180px);
+
+    min-height: 76px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.admin-header h1 {
+    font-size: 1.5rem;
+
+    line-height: 1.2;
+
+    color: #ffffff;
+}
+
+#logoutButton {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+
+    background: transparent;
+
+    color: #ffffff;
+
+    padding: 9px 18px;
+
+    border-radius: 7px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+#logoutButton:hover {
+    background: rgba(255, 255, 255, 0.10);
+
+    border-color: var(--accent-light);
+}
+
+
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
+
+.admin-dashboard {
+    width: min(100% - 32px, 1180px);
+
+    margin: 40px auto 60px;
+}
+
+
+/* =========================================================
+   DASHBOARD WELCOME
+========================================================= */
+
+.dashboard-welcome {
+    margin-bottom: 28px;
+}
+
+.dashboard-welcome h2 {
+    color: var(--primary);
+
+    font-size: clamp(1.7rem, 4vw, 2.2rem);
+
+    margin-bottom: 8px;
+}
+
+.dashboard-welcome p {
+    color: var(--text-light);
+
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   DASHBOARD CARD
+========================================================= */
+
+.dashboard-card {
+    background: var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 30px;
+
+    box-shadow: var(--shadow-md);
+}
+
+.dashboard-card > h2 {
+    color: var(--primary);
+
+    font-size: 1.4rem;
+
+    margin-bottom: 8px;
+}
+
+#dashboardMessage {
+    color: var(--text-light);
+
+    font-size: 0.92rem;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   INQUIRIES CONTAINER
+========================================================= */
+
+#inquiriesContainer {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   INQUIRY CARD
+========================================================= */
+
+.inquiry-card {
+    background: var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-left:
+        5px solid var(--accent);
+
+    border-radius: 10px;
+
+    padding: 24px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.inquiry-card:hover {
+    box-shadow: var(--shadow-md);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   INQUIRY HEADER
+========================================================= */
+
+.inquiry-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 17px;
+
+    margin-bottom: 18px;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+.inquiry-header h3 {
+    color: var(--primary);
+
+    font-size: 1.2rem;
+
+    line-height: 1.35;
+
+    margin-bottom: 5px;
+}
+
+.inquiry-date {
+    color: var(--text-light);
+
+    font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   INQUIRY STATUS BADGE
+========================================================= */
+
+.inquiry-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 90px;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    background: #edf7f1;
+
+    color: #267a50;
+
+    font-size: 0.75rem;
+
+    font-weight: 700;
+
+    text-transform: capitalize;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   INQUIRY DETAILS
+========================================================= */
+
+.inquiry-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px 24px;
+
+    margin-bottom: 22px;
+}
+
+.inquiry-details p {
+    color: var(--text-light);
+
+    font-size: 0.9rem;
+
+    line-height: 1.55;
+
+    overflow-wrap: anywhere;
+}
+
+.inquiry-details p:last-child {
+    grid-column: 1 / -1;
+}
+
+.inquiry-details strong {
+    color: var(--primary);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INQUIRY ACTIONS
+========================================================= */
+
+.inquiry-actions {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid var(--border);
+}
+
+.inquiry-actions label {
+    color: var(--primary);
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS SELECT
+========================================================= */
+
+.status-select {
+    min-width: 150px;
+
+    padding: 9px 12px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: var(--text);
+
+    font-size: 0.88rem;
+
+    cursor: pointer;
+
+    outline: none;
+}
+
+.status-select:focus {
+    border-color: var(--accent);
+
+    box-shadow:
+        0 0 0 3px rgba(212, 161, 44, 0.15);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.delete-inquiry-btn {
+    padding: 9px 16px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: var(--danger);
+
+    color: #ffffff;
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.delete-inquiry-btn:hover {
+    background: #b02a37;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   NO INQUIRIES
+========================================================= */
+
+.no-inquiries {
+    padding: 35px 20px;
+
+    text-align: center;
+
+    background: var(--surface-soft);
+
+    border:
+        1px dashed var(--border);
+
+    border-radius: 9px;
+}
+
+.no-inquiries p {
+    color: var(--text-light);
+
+    font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .admin-header-content {
+        min-height: 70px;
+    }
+
+    .admin-dashboard {
+        margin-top: 30px;
+    }
+
+    .dashboard-card {
+        padding: 24px;
+    }
+
+    .inquiry-details {
+        grid-template-columns: 1fr;
+    }
+
+    .inquiry-details p:last-child {
+        grid-column: auto;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .admin-header-content {
+        width: min(100% - 20px, 600px);
+
+        min-height: auto;
+
+        padding: 14px 0;
+
+        align-items: center;
+    }
+
+    .admin-header h1 {
+        font-size: 1.15rem;
+    }
+
+    #logoutButton {
+        padding: 8px 12px;
+
+        font-size: 0.82rem;
+    }
+
+    .admin-dashboard {
+        width: min(100% - 20px, 600px);
+
+        margin:
+            25px auto
+            40px;
+    }
+
+    .dashboard-welcome {
+        margin-bottom: 22px;
+    }
+
+    .dashboard-welcome h2 {
+        font-size: 1.55rem;
+    }
+
+    .dashboard-welcome p {
+        font-size: 0.9rem;
+    }
+
+    .dashboard-card {
+        padding: 18px;
+
+        border-radius: 10px;
+    }
+
+    .dashboard-card > h2 {
+        font-size: 1.2rem;
+    }
+
+    .inquiry-card {
+        padding: 18px;
+
+        border-left-width: 4px;
+    }
+
+    .inquiry-header {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .inquiry-header h3 {
+        font-size: 1.05rem;
+    }
+
+    .inquiry-status {
+        align-self: flex-start;
+    }
+
+    .inquiry-details {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .inquiry-details p {
+        font-size: 0.86rem;
+    }
+
+    .inquiry-actions {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .inquiry-actions label {
+        margin-bottom: -3px;
+    }
+
+    .status-select,
+    .delete-inquiry-btn {
+        width: 100%;
+    }
+}

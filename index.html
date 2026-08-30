@@ -85,8 +85,8 @@
 
             <button
                 type="button"
+                id="contactToggleBtn"
                 class="contact-toggle-btn"
-                onclick="toggleContactForm()"
                 aria-expanded="false"
                 aria-controls="contactFormContainer"
             >
@@ -109,7 +109,7 @@
                     </p>
                 </div>
 
-                <form class="client-form" action="#" method="POST">
+                <form id="client-contact-form" class="client-form" action="#" method="POST">
 
                     <div class="form-row">
 
@@ -152,9 +152,27 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="+2348012345678"
+                                autocomplete="tel"
+                                minlength="8
+                                maxlength="16"
+                                pattern="^\+[1-9][0-9]{7,14}$"
+                                title="Enter your phone number with country code, e.g., +2348012345678"
+                            >
+                        </div>
+
+                    </div>
+
+
+                        <div class="form-group">
                             <label for="project-type">Project Type</label>
 
-                            <select id="project-type" name="project-type">
+                            <select id="project_type" name="project_type">
                                 <option value="residential">
                                     Residential Construction
                                 </option>
@@ -205,7 +223,7 @@
                                 type="text"
                                 id="budget"
                                 name="budget"
-                                placeholder="e.g. ₦5,000,000"
+                                placeholder="e.g. ₦5,000,000" required
                             >
                         </div>
 
@@ -218,7 +236,7 @@
                                 type="text"
                                 id="timeline"
                                 name="timeline"
-                                placeholder="e.g. 6 months"
+                                placeholder="e.g. 6 months" required
                             >
                         </div>
 
@@ -234,7 +252,7 @@
                             id="comments"
                             name="comments"
                             rows="5"
-                            placeholder="Tell me briefly about your project..."
+                            placeholder="Tell me briefly about your project..." required
                         ></textarea>
                     </div>
 

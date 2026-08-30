@@ -2,15 +2,15 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from backend.auth import (
+from Backend.auth import (
+    ADMIN_USERNAME,
     create_access_token,
     get_current_admin,
     verify_admin_password,
-    ADMIN_USERNAME,
 )
-from backend.database import Base, engine, get_db
-from backend.models import ContactInquiry
-from backend.schemas import (
+from Backend.database import Base, engine, get_db
+from Backend.models import ContactInquiry
+from Backend.schemas import (
     AdminLoginRequest,
     AdminLoginResponse,
     ContactInquiryCreate,
@@ -18,9 +18,16 @@ from backend.schemas import (
 )
 
 
-# Create database tables
+# =========================================================
+# CREATE DATABASE TABLES
+# =========================================================
+
 Base.metadata.create_all(bind=engine)
 
+
+# =========================================================
+# FASTAPI APPLICATION
+# =========================================================
 
 app = FastAPI(
     title="Personal Website Contact API",
@@ -29,16 +36,16 @@ app = FastAPI(
 )
 
 
-# --------------------------------------------------
+# =========================================================
 # CORS
-# --------------------------------------------------
+# =========================================================
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://anayo-engr.github.io",
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
+        "http://127.0.0.1:5501",
+        "http://localhost:5501",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -46,9 +53,9 @@ app.add_middleware(
 )
 
 
-# --------------------------------------------------
+# =========================================================
 # ROOT
-# --------------------------------------------------
+# =========================================================
 
 @app.get("/")
 def root():
@@ -58,9 +65,9 @@ def root():
     }
 
 
-# --------------------------------------------------
+# =========================================================
 # HEALTH CHECK
-# --------------------------------------------------
+# =========================================================
 
 @app.get("/health")
 def health():
@@ -69,9 +76,9 @@ def health():
     }
 
 
-# --------------------------------------------------
-# CLIENT CONTACT FORM
-# --------------------------------------------------
+# =========================================================
+# PUBLIC - SUBMIT CONTACT INQUIRY
+# =========================================================
 
 @app.post(
     "/contact",
@@ -86,6 +93,7 @@ def create_contact_inquiry(
         surname=inquiry.surname,
         othernames=inquiry.othernames,
         email=inquiry.email,
+        phone=inquiry.phone,
         project_type=inquiry.project_type,
         location=inquiry.location,
         budget=inquiry.budget,
@@ -101,9 +109,9 @@ def create_contact_inquiry(
     return new_inquiry
 
 
-# --------------------------------------------------
+# =========================================================
 # ADMIN LOGIN
-# --------------------------------------------------
+# =========================================================
 
 @app.post(
     "/admin/login",
@@ -112,18 +120,21 @@ def create_contact_inquiry(
 def admin_login(
     login_data: AdminLoginRequest,
 ):
+    # Check username
     if login_data.username != ADMIN_USERNAME:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password.",
         )
 
+    # Check password
     if not verify_admin_password(login_data.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password.",
         )
 
+    # Create authentication token
     token = create_access_token()
 
     return {
@@ -132,9 +143,42 @@ def admin_login(
     }
 
 
-# --------------------------------------------------
+# =========================================================
+# PUBLIC - SUBMIT INQUIRY
+# =========================================================
+
+@app.post(
+    "/inquiries",
+    response_model=ContactInquiryResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_inquiry(
+    inquiry: ContactInquiryCreate,
+    db: Session = Depends(get_db),
+):
+    new_inquiry = ContactInquiry(
+        surname=inquiry.surname,
+        othernames=inquiry.othernames,
+        email=inquiry.email,
+        phone=inquiry.phone,
+        project_type=inquiry.project_type,
+        location=inquiry.location,
+        budget=inquiry.budget,
+        timeline=inquiry.timeline,
+        comments=inquiry.comments,
+        status="new",
+    )
+
+    db.add(new_inquiry)
+    db.commit()
+    db.refresh(new_inquiry)
+
+    return new_inquiry
+
+
+# =========================================================
 # ADMIN - VIEW ALL ENQUIRIES
-# --------------------------------------------------
+# =========================================================
 
 @app.get(
     "/admin/inquiries",
@@ -153,9 +197,9 @@ def get_all_inquiries(
     return inquiries
 
 
-# --------------------------------------------------
+# =========================================================
 # ADMIN - VIEW ONE ENQUIRY
-# --------------------------------------------------
+# =========================================================
 
 @app.get(
     "/admin/inquiries/{inquiry_id}",
@@ -181,9 +225,9 @@ def get_inquiry(
     return inquiry
 
 
-# --------------------------------------------------
+# =========================================================
 # ADMIN - UPDATE ENQUIRY STATUS
-# --------------------------------------------------
+# =========================================================
 
 @app.patch(
     "/admin/inquiries/{inquiry_id}/status",
@@ -233,9 +277,9 @@ def update_inquiry_status(
     return inquiry
 
 
-# --------------------------------------------------
+# =========================================================
 # ADMIN - DELETE ENQUIRY
-# --------------------------------------------------
+# =========================================================
 
 @app.delete(
     "/admin/inquiries/{inquiry_id}",

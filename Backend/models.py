@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, Integer, String, Text
 
-from backend.database import Base
+from Backend.database import Base
 
 
 class ContactInquiry(Base):
@@ -14,6 +14,8 @@ class ContactInquiry(Base):
     othernames = Column(String(150), nullable=False)
 
     email = Column(String(255), nullable=False, index=True)
+
+    phone = Column(String(16), nullable=True, index=True)
 
     project_type = Column(String(100), nullable=False)
 

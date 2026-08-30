@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Personal Website</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<header class="admin-header">
+    <div class="admin-header-content">
+        <h1>Admin Dashboard</h1>
+
+        <button id="logoutButton" type="button">
+            Logout
+        </button>
+    </div>
+</header>
+
+<main class="admin-dashboard">
+
+    <section class="dashboard-welcome">
+        <h2>Welcome, Administrator</h2>
+
+        <p>
+            You are successfully logged in to the personal website
+            administration area.
+        </p>
+    </section>
+
+
+    <section class="dashboard-card">
+
+        <h2>Client Inquiries</h2>
+
+        <p id="dashboardMessage">
+            Loading inquiries...
+        </p>
+
+        <div id="inquiriesContainer"></div>
+
+    </section>
+
+</main>
+
+<script src="admin-dashboard.js"></script>
+
+</body>
+</html>

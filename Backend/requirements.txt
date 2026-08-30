@@ -4,3 +4,4 @@ sqlalchemy
 pydantic[email]
 python-jose[cryptography]
 pwdlib[argon2]
+psycopg[binary]

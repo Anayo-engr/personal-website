@@ -18,6 +18,13 @@ class ContactInquiryCreate(BaseModel):
 
     email: EmailStr
 
+    phone: str | None = Field(
+        default=None,
+        min_length=8,
+        max_length=16,
+        pattern=r"^\+[1-9]\d{7,14}$",
+    )
+
     project_type: str = Field(
         ...,
         min_length=1,
