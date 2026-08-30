@@ -1,6 +1,11 @@
-"use strict";
+/*
+ * =========================================================
+ * LIVE RENDER BACKEND
+ * =========================================================
+ */
 
-const API_BASE_URL = "http://127.0.0.1:8001";
+const API_BASE_URL = "https://personal-website-uv7b.onrender.com";
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -14,91 +19,137 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("inquiriesContainer");
 
     const token =
-        localStorage.getItem("admin_access_token");
+        localStorage.getItem(
+            "admin_access_token"
+        );
 
-    // --------------------------------------------------
-    // PROTECT ADMIN DASHBOARD
-    // --------------------------------------------------
+
+    /*
+     * =========================================================
+     * PROTECT DASHBOARD
+     * =========================================================
+     */
 
     if (!token) {
-        window.location.href = "admin.html";
+
+        window.location.href =
+            "admin.html";
+
         return;
     }
 
 
-    // --------------------------------------------------
-    // LOGOUT
-    // --------------------------------------------------
+    /*
+     * =========================================================
+     * LOGOUT
+     * =========================================================
+     */
 
-    logoutButton.addEventListener("click", () => {
+    if (logoutButton) {
 
-        localStorage.removeItem("admin_access_token");
-        localStorage.removeItem("admin_token_type");
+        logoutButton.addEventListener(
+            "click",
+            () => {
 
-        window.location.href = "admin.html";
-    });
+                localStorage.removeItem(
+                    "admin_access_token"
+                );
+
+                localStorage.removeItem(
+                    "admin_token_type"
+                );
+
+                window.location.href =
+                    "admin.html";
+            }
+        );
+    }
 
 
-    // --------------------------------------------------
-    // AUTHORIZATION HEADER
-    // --------------------------------------------------
+    /*
+     * =========================================================
+     * AUTHORIZATION HEADERS
+     * =========================================================
+     */
 
     function getAuthHeaders() {
 
         return {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        };
+            "Authorization":
+                `Bearer ${token}`,
 
+            "Content-Type":
+                "application/json"
+        };
     }
 
 
-    // --------------------------------------------------
-    // CREATE DASHBOARD SUMMARY
-    // --------------------------------------------------
+    /*
+     * =========================================================
+     * DASHBOARD SUMMARY
+     * =========================================================
+     */
 
-    function createDashboardSummary(inquiries) {
+    function createDashboardSummary(
+        inquiries
+    ) {
 
         const existingSummary =
-            document.getElementById("dashboardSummary");
+            document.getElementById(
+                "dashboardSummary"
+            );
+
 
         if (existingSummary) {
             existingSummary.remove();
         }
 
+
         const total =
             inquiries.length;
 
+
         const newCount =
             inquiries.filter(
-                inquiry => inquiry.status === "new"
+                inquiry =>
+                    inquiry.status === "new"
             ).length;
+
 
         const contactedCount =
             inquiries.filter(
-                inquiry => inquiry.status === "contacted"
+                inquiry =>
+                    inquiry.status === "contacted"
             ).length;
+
 
         const inProgressCount =
             inquiries.filter(
-                inquiry => inquiry.status === "in_progress"
+                inquiry =>
+                    inquiry.status === "in_progress"
             ).length;
+
 
         const completedCount =
             inquiries.filter(
-                inquiry => inquiry.status === "completed"
+                inquiry =>
+                    inquiry.status === "completed"
             ).length;
+
 
         const archivedCount =
             inquiries.filter(
-                inquiry => inquiry.status === "archived"
+                inquiry =>
+                    inquiry.status === "archived"
             ).length;
 
 
         const summary =
             document.createElement("div");
 
-        summary.id = "dashboardSummary";
+        summary.id =
+            "dashboardSummary";
+
 
         summary.innerHTML = `
 
@@ -136,38 +187,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         const dashboardCard =
-            document.querySelector(".dashboard-card");
+            document.querySelector(
+                ".dashboard-card"
+            );
 
-        dashboardCard.insertBefore(
-            summary,
-            inquiriesContainer
-        );
 
+        if (dashboardCard) {
+
+            dashboardCard.insertBefore(
+                summary,
+                inquiriesContainer
+            );
+        }
     }
 
 
-    // --------------------------------------------------
-    // LOAD CLIENT INQUIRIES
-    // --------------------------------------------------
+    /*
+     * =========================================================
+     * LOAD INQUIRIES
+     * =========================================================
+     */
 
     async function loadInquiries() {
 
         dashboardMessage.textContent =
             "Loading inquiries...";
 
+
         try {
 
-            const response = await fetch(
-                `${API_BASE_URL}/admin/inquiries`,
-                {
-                    method: "GET",
-                    headers: getAuthHeaders()
-                }
-            );
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/admin/inquiries`,
+                    {
+                        method: "GET",
+
+                        headers:
+                            getAuthHeaders()
+                    }
+                );
 
 
-            const result =
-                await response.json();
+            let result = {};
+
+            try {
+
+                result =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                result = {};
+            }
 
 
             console.log(
@@ -176,9 +247,9 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-            // --------------------------------------------------
-            // AUTHENTICATION FAILURE
-            // --------------------------------------------------
+            /*
+             * Authentication failure
+             */
 
             if (
                 response.status === 401 ||
@@ -206,7 +277,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     result.detail ||
                     "Unable to load inquiries."
                 );
+            }
 
+
+            /*
+             * Make sure response is an array
+             */
+
+            if (!Array.isArray(result)) {
+
+                throw new Error(
+                    "Invalid inquiry data received from server."
+                );
             }
 
 
@@ -217,14 +299,11 @@ document.addEventListener("DOMContentLoaded", () => {
             createDashboardSummary(result);
 
 
-            // --------------------------------------------------
-            // NO INQUIRIES
-            // --------------------------------------------------
+            /*
+             * No inquiries
+             */
 
-            if (
-                !Array.isArray(result) ||
-                result.length === 0
-            ) {
+            if (result.length === 0) {
 
                 inquiriesContainer.innerHTML = `
                     <p>No client inquiries found.</p>
@@ -234,328 +313,412 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            inquiriesContainer.innerHTML = "";
+            inquiriesContainer.innerHTML =
+                "";
 
 
-            // --------------------------------------------------
-            // DISPLAY EACH INQUIRY
-            // --------------------------------------------------
+            /*
+             * =================================================
+             * DISPLAY INQUIRIES
+             * =================================================
+             */
 
-            result.forEach((inquiry) => {
+            result.forEach(
+                (inquiry) => {
 
-                const card =
-                    document.createElement("div");
-
-                card.className =
-                    "inquiry-card";
-
-
-                const fullName =
-                    `${inquiry.surname || ""} ${
-                        inquiry.othernames || ""
-                    }`.trim();
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
 
 
-                const formattedDate =
-                    inquiry.created_at
-                        ? new Date(
-                            inquiry.created_at
-                        ).toLocaleString()
-                        : "N/A";
+                    card.className =
+                        "inquiry-card";
 
 
-                card.innerHTML = `
+                    const fullName =
+                        `${inquiry.surname || ""} ${
+                            inquiry.othernames || ""
+                        }`.trim();
 
-                    <div class="inquiry-header">
 
-                        <div>
-                            <h3>
-                                ${fullName || "Unnamed Client"}
-                            </h3>
+                    const formattedDate =
+                        inquiry.created_at
+                            ? new Date(
+                                inquiry.created_at
+                            ).toLocaleString()
+                            : "N/A";
 
-                            <small>
-                                Submitted:
-                                ${formattedDate}
-                            </small>
+
+                    card.innerHTML = `
+
+                        <div class="inquiry-header">
+
+                            <div>
+
+                                <h3>
+                                    ${
+                                        fullName ||
+                                        "Unnamed Client"
+                                    }
+                                </h3>
+
+                                <small>
+                                    Submitted:
+                                    ${formattedDate}
+                                </small>
+
+                            </div>
+
                         </div>
 
-                    </div>
+
+                        <div class="inquiry-details">
+
+                            <p>
+                                <strong>Email:</strong>
+                                ${inquiry.email || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Phone:</strong>
+                                ${inquiry.phone || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Project Type:</strong>
+                                ${inquiry.project_type || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Budget:</strong>
+                                ${inquiry.budget || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                ${inquiry.location || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Timeline:</strong>
+                                ${inquiry.timeline || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Comments:</strong>
+                                ${inquiry.comments || "N/A"}
+                            </p>
+
+                        </div>
 
 
-                    <div class="inquiry-details">
+                        <div class="inquiry-actions">
 
-                        <p>
-                            <strong>Email:</strong>
-                            ${inquiry.email || "N/A"}
-                        </p>
+                            <label>
 
-                        <p>
-                            <strong>Phone:</strong>
-                            ${inquiry.phone || "N/A"}
-                        </p>
+                                <strong>Status:</strong>
 
-                        <p>
-                            <strong>Project Type:</strong>
-                            ${inquiry.project_type || "N/A"}
-                        </p>
+                                <select
+                                    class="status-select"
+                                    data-id="${inquiry.id}"
+                                >
 
-                        <p>
-                            <strong>Budget:</strong>
-                            ${inquiry.budget || "N/A"}
-                        </p>
+                                    <option
+                                        value="new"
+                                        ${
+                                            inquiry.status === "new"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        New
+                                    </option>
 
-                        <p>
-                            <strong>Location:</strong>
-                            ${inquiry.location || "N/A"}
-                        </p>
+                                    <option
+                                        value="contacted"
+                                        ${
+                                            inquiry.status === "contacted"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Contacted
+                                    </option>
 
-                        <p>
-                            <strong>Timeline:</strong>
-                            ${inquiry.timeline || "N/A"}
-                        </p>
+                                    <option
+                                        value="in_progress"
+                                        ${
+                                            inquiry.status === "in_progress"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        In Progress
+                                    </option>
 
-                        <p>
-                            <strong>Comments:</strong>
-                            ${inquiry.comments || "N/A"}
-                        </p>
+                                    <option
+                                        value="completed"
+                                        ${
+                                            inquiry.status === "completed"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Completed
+                                    </option>
 
-                    </div>
+                                    <option
+                                        value="archived"
+                                        ${
+                                            inquiry.status === "archived"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Archived
+                                    </option>
+
+                                </select>
+
+                            </label>
 
 
-                    <div class="inquiry-actions">
-
-                        <label>
-                            <strong>Status:</strong>
-
-                            <select
-                                class="status-select"
+                            <button
+                                type="button"
+                                class="delete-inquiry-button"
                                 data-id="${inquiry.id}"
                             >
+                                Delete
+                            </button>
 
-                                <option value="new"
-                                    ${inquiry.status === "new" ? "selected" : ""}>
-                                    New
-                                </option>
+                        </div>
 
-                                <option value="contacted"
-                                    ${inquiry.status === "contacted" ? "selected" : ""}>
-                                    Contacted
-                                </option>
-
-                                <option value="in_progress"
-                                    ${inquiry.status === "in_progress" ? "selected" : ""}>
-                                    In Progress
-                                </option>
-
-                                <option value="completed"
-                                    ${inquiry.status === "completed" ? "selected" : ""}>
-                                    Completed
-                                </option>
-
-                                <option value="archived"
-                                    ${inquiry.status === "archived" ? "selected" : ""}>
-                                    Archived
-                                </option>
-
-                            </select>
-
-                        </label>
+                    `;
 
 
-                        <button
-                            type="button"
-                            class="delete-inquiry-button"
-                            data-id="${inquiry.id}"
-                        >
-                            Delete
-                        </button>
-
-                    </div>
-
-                `;
+                    inquiriesContainer.appendChild(
+                        card
+                    );
+                }
+            );
 
 
-                inquiriesContainer.appendChild(card);
-
-            });
-
-
-            // --------------------------------------------------
-            // STATUS CHANGE
-            // --------------------------------------------------
+            /*
+             * =================================================
+             * STATUS CHANGE
+             * =================================================
+             */
 
             document
-                .querySelectorAll(".status-select")
-                .forEach((select) => {
+                .querySelectorAll(
+                    ".status-select"
+                )
+                .forEach(
+                    (select) => {
 
-                    select.addEventListener(
-                        "change",
-                        async () => {
+                        select.addEventListener(
+                            "change",
+                            async () => {
 
-                            const inquiryId =
-                                select.dataset.id;
+                                const inquiryId =
+                                    select.dataset.id;
 
-                            const newStatus =
-                                select.value;
-
-
-                            try {
-
-                                select.disabled = true;
+                                const newStatus =
+                                    select.value;
 
 
-                                const response =
-                                    await fetch(
-                                        `${API_BASE_URL}/admin/inquiries/${inquiryId}/status?new_status=${encodeURIComponent(newStatus)}`,
-                                        {
-                                            method: "PATCH",
+                                try {
 
-                                            headers:
-                                                getAuthHeaders()
-                                        }
+                                    select.disabled =
+                                        true;
+
+
+                                    const response =
+                                        await fetch(
+                                            `${API_BASE_URL}/admin/inquiries/${inquiryId}/status?new_status=${encodeURIComponent(newStatus)}`,
+                                            {
+                                                method:
+                                                    "PATCH",
+
+                                                headers:
+                                                    getAuthHeaders()
+                                            }
+                                        );
+
+
+                                    let result = {};
+
+                                    try {
+
+                                        result =
+                                            await response.json();
+
+                                    } catch (
+                                        jsonError
+                                    ) {
+
+                                        result = {};
+                                    }
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.detail ||
+                                            "Unable to update status."
+                                        );
+                                    }
+
+
+                                    console.log(
+                                        "STATUS UPDATED:",
+                                        result
                                     );
 
 
-                                const result =
-                                    await response.json();
+                                    await loadInquiries();
 
 
-                                if (!response.ok) {
+                                } catch (error) {
 
-                                    throw new Error(
-                                        result.detail ||
+                                    console.error(
+                                        "Status update error:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
                                         "Unable to update status."
                                     );
 
+
+                                    await loadInquiries();
                                 }
 
-
-                                console.log(
-                                    "STATUS UPDATED:",
-                                    result
-                                );
-
-
-                                // Refresh dashboard
-                                await loadInquiries();
-
-                            } catch (error) {
-
-                                console.error(
-                                    "Status update error:",
-                                    error
-                                );
-
-                                alert(
-                                    error.message ||
-                                    "Unable to update status."
-                                );
-
-                                await loadInquiries();
-
                             }
-
-                        }
-                    );
-
-                });
+                        );
+                    }
+                );
 
 
-            // --------------------------------------------------
-            // DELETE INQUIRY
-            // --------------------------------------------------
+            /*
+             * =================================================
+             * DELETE INQUIRY
+             * =================================================
+             */
 
             document
                 .querySelectorAll(
                     ".delete-inquiry-button"
                 )
-                .forEach((button) => {
+                .forEach(
+                    (button) => {
 
-                    button.addEventListener(
-                        "click",
-                        async () => {
+                        button.addEventListener(
+                            "click",
+                            async () => {
 
-                            const inquiryId =
-                                button.dataset.id;
-
-
-                            const confirmed =
-                                confirm(
-                                    "Are you sure you want to delete this client inquiry?"
-                                );
+                                const inquiryId =
+                                    button.dataset.id;
 
 
-                            if (!confirmed) {
-                                return;
-                            }
-
-
-                            try {
-
-                                button.disabled = true;
-
-                                button.textContent =
-                                    "Deleting...";
-
-
-                                const response =
-                                    await fetch(
-                                        `${API_BASE_URL}/admin/inquiries/${inquiryId}`,
-                                        {
-                                            method: "DELETE",
-
-                                            headers:
-                                                getAuthHeaders()
-                                        }
+                                const confirmed =
+                                    confirm(
+                                        "Are you sure you want to delete this client inquiry?"
                                     );
 
 
-                                const result =
-                                    await response.json();
-
-
-                                if (!response.ok) {
-
-                                    throw new Error(
-                                        result.detail ||
-                                        "Unable to delete inquiry."
-                                    );
-
+                                if (!confirmed) {
+                                    return;
                                 }
 
 
-                                console.log(
-                                    "INQUIRY DELETED:",
-                                    result
-                                );
+                                try {
+
+                                    button.disabled =
+                                        true;
+
+                                    button.textContent =
+                                        "Deleting...";
 
 
-                                // Refresh dashboard
-                                await loadInquiries();
+                                    const response =
+                                        await fetch(
+                                            `${API_BASE_URL}/admin/inquiries/${inquiryId}`,
+                                            {
+                                                method:
+                                                    "DELETE",
 
-                            } catch (error) {
+                                                headers:
+                                                    getAuthHeaders()
+                                            }
+                                        );
 
-                                console.error(
-                                    "Delete error:",
-                                    error
-                                );
 
-                                alert(
-                                    error.message ||
-                                    "Unable to delete inquiry."
-                                );
+                                    let result = {};
 
-                                button.disabled = false;
+                                    try {
 
-                                button.textContent =
-                                    "Delete";
+                                        result =
+                                            await response.json();
+
+                                    } catch (
+                                        jsonError
+                                    ) {
+
+                                        result = {};
+                                    }
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.detail ||
+                                            "Unable to delete inquiry."
+                                        );
+                                    }
+
+
+                                    console.log(
+                                        "INQUIRY DELETED:",
+                                        result
+                                    );
+
+
+                                    await loadInquiries();
+
+
+                                } catch (error) {
+
+                                    console.error(
+                                        "Delete error:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
+                                        "Unable to delete inquiry."
+                                    );
+
+
+                                    button.disabled =
+                                        false;
+
+                                    button.textContent =
+                                        "Delete";
+                                }
 
                             }
-
-                        }
-                    );
-
-                });
+                        );
+                    }
+                );
 
 
         } catch (error) {
@@ -569,15 +732,1505 @@ document.addEventListener("DOMContentLoaded", () => {
             dashboardMessage.textContent =
                 error.message ||
                 "Unable to connect to server.";
-
         }
-
     }
 
 
-    // --------------------------------------------------
-    // START DASHBOARD
-    // --------------------------------------------------
+    /*
+     * =========================================================
+     * START DASHBOARD
+     * =========================================================
+     */
+
+    loadInquiries();
+
+});/*
+ * =========================================================
+ * LIVE RENDER BACKEND
+ * =========================================================
+ */
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    const dashboardMessage =
+        document.getElementById("dashboardMessage");
+
+    const inquiriesContainer =
+        document.getElementById("inquiriesContainer");
+
+    const token =
+        localStorage.getItem(
+            "admin_access_token"
+        );
+
+
+    /*
+     * =========================================================
+     * PROTECT DASHBOARD
+     * =========================================================
+     */
+
+    if (!token) {
+
+        window.location.href =
+            "admin.html";
+
+        return;
+    }
+
+
+    /*
+     * =========================================================
+     * LOGOUT
+     * =========================================================
+     */
+
+    if (logoutButton) {
+
+        logoutButton.addEventListener(
+            "click",
+            () => {
+
+                localStorage.removeItem(
+                    "admin_access_token"
+                );
+
+                localStorage.removeItem(
+                    "admin_token_type"
+                );
+
+                window.location.href =
+                    "admin.html";
+            }
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * AUTHORIZATION HEADERS
+     * =========================================================
+     */
+
+    function getAuthHeaders() {
+
+        return {
+            "Authorization":
+                `Bearer ${token}`,
+
+            "Content-Type":
+                "application/json"
+        };
+    }
+
+
+    /*
+     * =========================================================
+     * DASHBOARD SUMMARY
+     * =========================================================
+     */
+
+    function createDashboardSummary(
+        inquiries
+    ) {
+
+        const existingSummary =
+            document.getElementById(
+                "dashboardSummary"
+            );
+
+
+        if (existingSummary) {
+            existingSummary.remove();
+        }
+
+
+        const total =
+            inquiries.length;
+
+
+        const newCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "new"
+            ).length;
+
+
+        const contactedCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "contacted"
+            ).length;
+
+
+        const inProgressCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "in_progress"
+            ).length;
+
+
+        const completedCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "completed"
+            ).length;
+
+
+        const archivedCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "archived"
+            ).length;
+
+
+        const summary =
+            document.createElement("div");
+
+        summary.id =
+            "dashboardSummary";
+
+
+        summary.innerHTML = `
+
+            <div class="summary-card">
+                <strong>${total}</strong>
+                <span>Total</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${newCount}</strong>
+                <span>New</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${contactedCount}</strong>
+                <span>Contacted</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${inProgressCount}</strong>
+                <span>In Progress</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${completedCount}</strong>
+                <span>Completed</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${archivedCount}</strong>
+                <span>Archived</span>
+            </div>
+
+        `;
+
+
+        const dashboardCard =
+            document.querySelector(
+                ".dashboard-card"
+            );
+
+
+        if (dashboardCard) {
+
+            dashboardCard.insertBefore(
+                summary,
+                inquiriesContainer
+            );
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * LOAD INQUIRIES
+     * =========================================================
+     */
+
+    async function loadInquiries() {
+
+        dashboardMessage.textContent =
+            "Loading inquiries...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/admin/inquiries`,
+                    {
+                        method: "GET",
+
+                        headers:
+                            getAuthHeaders()
+                    }
+                );
+
+
+            let result = {};
+
+            try {
+
+                result =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                result = {};
+            }
+
+
+            console.log(
+                "ADMIN INQUIRIES RESPONSE:",
+                result
+            );
+
+
+            /*
+             * Authentication failure
+             */
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                localStorage.removeItem(
+                    "admin_access_token"
+                );
+
+                localStorage.removeItem(
+                    "admin_token_type"
+                );
+
+                window.location.href =
+                    "admin.html";
+
+                return;
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.detail ||
+                    "Unable to load inquiries."
+                );
+            }
+
+
+            /*
+             * Make sure response is an array
+             */
+
+            if (!Array.isArray(result)) {
+
+                throw new Error(
+                    "Invalid inquiry data received from server."
+                );
+            }
+
+
+            dashboardMessage.textContent =
+                `${result.length} inquiries loaded.`;
+
+
+            createDashboardSummary(result);
+
+
+            /*
+             * No inquiries
+             */
+
+            if (result.length === 0) {
+
+                inquiriesContainer.innerHTML = `
+                    <p>No client inquiries found.</p>
+                `;
+
+                return;
+            }
+
+
+            inquiriesContainer.innerHTML =
+                "";
+
+
+            /*
+             * =================================================
+             * DISPLAY INQUIRIES
+             * =================================================
+             */
+
+            result.forEach(
+                (inquiry) => {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "inquiry-card";
+
+
+                    const fullName =
+                        `${inquiry.surname || ""} ${
+                            inquiry.othernames || ""
+                        }`.trim();
+
+
+                    const formattedDate =
+                        inquiry.created_at
+                            ? new Date(
+                                inquiry.created_at
+                            ).toLocaleString()
+                            : "N/A";
+
+
+                    card.innerHTML = `
+
+                        <div class="inquiry-header">
+
+                            <div>
+
+                                <h3>
+                                    ${
+                                        fullName ||
+                                        "Unnamed Client"
+                                    }
+                                </h3>
+
+                                <small>
+                                    Submitted:
+                                    ${formattedDate}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="inquiry-details">
+
+                            <p>
+                                <strong>Email:</strong>
+                                ${inquiry.email || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Phone:</strong>
+                                ${inquiry.phone || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Project Type:</strong>
+                                ${inquiry.project_type || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Budget:</strong>
+                                ${inquiry.budget || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                ${inquiry.location || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Timeline:</strong>
+                                ${inquiry.timeline || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Comments:</strong>
+                                ${inquiry.comments || "N/A"}
+                            </p>
+
+                        </div>
+
+
+                        <div class="inquiry-actions">
+
+                            <label>
+
+                                <strong>Status:</strong>
+
+                                <select
+                                    class="status-select"
+                                    data-id="${inquiry.id}"
+                                >
+
+                                    <option
+                                        value="new"
+                                        ${
+                                            inquiry.status === "new"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        New
+                                    </option>
+
+                                    <option
+                                        value="contacted"
+                                        ${
+                                            inquiry.status === "contacted"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Contacted
+                                    </option>
+
+                                    <option
+                                        value="in_progress"
+                                        ${
+                                            inquiry.status === "in_progress"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        In Progress
+                                    </option>
+
+                                    <option
+                                        value="completed"
+                                        ${
+                                            inquiry.status === "completed"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Completed
+                                    </option>
+
+                                    <option
+                                        value="archived"
+                                        ${
+                                            inquiry.status === "archived"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Archived
+                                    </option>
+
+                                </select>
+
+                            </label>
+
+
+                            <button
+                                type="button"
+                                class="delete-inquiry-button"
+                                data-id="${inquiry.id}"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    inquiriesContainer.appendChild(
+                        card
+                    );
+                }
+            );
+
+
+            /*
+             * =================================================
+             * STATUS CHANGE
+             * =================================================
+             */
+
+            document
+                .querySelectorAll(
+                    ".status-select"
+                )
+                .forEach(
+                    (select) => {
+
+                        select.addEventListener(
+                            "change",
+                            async () => {
+
+                                const inquiryId =
+                                    select.dataset.id;
+
+                                const newStatus =
+                                    select.value;
+
+
+                                try {
+
+                                    select.disabled =
+                                        true;
+
+
+                                    const response =
+                                        await fetch(
+                                            `${API_BASE_URL}/admin/inquiries/${inquiryId}/status?new_status=${encodeURIComponent(newStatus)}`,
+                                            {
+                                                method:
+                                                    "PATCH",
+
+                                                headers:
+                                                    getAuthHeaders()
+                                            }
+                                        );
+
+
+                                    let result = {};
+
+                                    try {
+
+                                        result =
+                                            await response.json();
+
+                                    } catch (
+                                        jsonError
+                                    ) {
+
+                                        result = {};
+                                    }
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.detail ||
+                                            "Unable to update status."
+                                        );
+                                    }
+
+
+                                    console.log(
+                                        "STATUS UPDATED:",
+                                        result
+                                    );
+
+
+                                    await loadInquiries();
+
+
+                                } catch (error) {
+
+                                    console.error(
+                                        "Status update error:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
+                                        "Unable to update status."
+                                    );
+
+
+                                    await loadInquiries();
+                                }
+
+                            }
+                        );
+                    }
+                );
+
+
+            /*
+             * =================================================
+             * DELETE INQUIRY
+             * =================================================
+             */
+
+            document
+                .querySelectorAll(
+                    ".delete-inquiry-button"
+                )
+                .forEach(
+                    (button) => {
+
+                        button.addEventListener(
+                            "click",
+                            async () => {
+
+                                const inquiryId =
+                                    button.dataset.id;
+
+
+                                const confirmed =
+                                    confirm(
+                                        "Are you sure you want to delete this client inquiry?"
+                                    );
+
+
+                                if (!confirmed) {
+                                    return;
+                                }
+
+
+                                try {
+
+                                    button.disabled =
+                                        true;
+
+                                    button.textContent =
+                                        "Deleting...";
+
+
+                                    const response =
+                                        await fetch(
+                                            `${API_BASE_URL}/admin/inquiries/${inquiryId}`,
+                                            {
+                                                method:
+                                                    "DELETE",
+
+                                                headers:
+                                                    getAuthHeaders()
+                                            }
+                                        );
+
+
+                                    let result = {};
+
+                                    try {
+
+                                        result =
+                                            await response.json();
+
+                                    } catch (
+                                        jsonError
+                                    ) {
+
+                                        result = {};
+                                    }
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.detail ||
+                                            "Unable to delete inquiry."
+                                        );
+                                    }
+
+
+                                    console.log(
+                                        "INQUIRY DELETED:",
+                                        result
+                                    );
+
+
+                                    await loadInquiries();
+
+
+                                } catch (error) {
+
+                                    console.error(
+                                        "Delete error:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
+                                        "Unable to delete inquiry."
+                                    );
+
+
+                                    button.disabled =
+                                        false;
+
+                                    button.textContent =
+                                        "Delete";
+                                }
+
+                            }
+                        );
+                    }
+                );
+
+
+        } catch (error) {
+
+            console.error(
+                "Dashboard error:",
+                error
+            );
+
+
+            dashboardMessage.textContent =
+                error.message ||
+                "Unable to connect to server.";
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * START DASHBOARD
+     * =========================================================
+     */
+
+    loadInquiries();
+
+});/*
+ * =========================================================
+ * LIVE RENDER BACKEND
+ * =========================================================
+ */
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    const dashboardMessage =
+        document.getElementById("dashboardMessage");
+
+    const inquiriesContainer =
+        document.getElementById("inquiriesContainer");
+
+    const token =
+        localStorage.getItem(
+            "admin_access_token"
+        );
+
+
+    /*
+     * =========================================================
+     * PROTECT DASHBOARD
+     * =========================================================
+     */
+
+    if (!token) {
+
+        window.location.href =
+            "admin.html";
+
+        return;
+    }
+
+
+    /*
+     * =========================================================
+     * LOGOUT
+     * =========================================================
+     */
+
+    if (logoutButton) {
+
+        logoutButton.addEventListener(
+            "click",
+            () => {
+
+                localStorage.removeItem(
+                    "admin_access_token"
+                );
+
+                localStorage.removeItem(
+                    "admin_token_type"
+                );
+
+                window.location.href =
+                    "admin.html";
+            }
+        );
+    }
+
+
+    /*
+     * =========================================================
+     * AUTHORIZATION HEADERS
+     * =========================================================
+     */
+
+    function getAuthHeaders() {
+
+        return {
+            "Authorization":
+                `Bearer ${token}`,
+
+            "Content-Type":
+                "application/json"
+        };
+    }
+
+
+    /*
+     * =========================================================
+     * DASHBOARD SUMMARY
+     * =========================================================
+     */
+
+    function createDashboardSummary(
+        inquiries
+    ) {
+
+        const existingSummary =
+            document.getElementById(
+                "dashboardSummary"
+            );
+
+
+        if (existingSummary) {
+            existingSummary.remove();
+        }
+
+
+        const total =
+            inquiries.length;
+
+
+        const newCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "new"
+            ).length;
+
+
+        const contactedCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "contacted"
+            ).length;
+
+
+        const inProgressCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "in_progress"
+            ).length;
+
+
+        const completedCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "completed"
+            ).length;
+
+
+        const archivedCount =
+            inquiries.filter(
+                inquiry =>
+                    inquiry.status === "archived"
+            ).length;
+
+
+        const summary =
+            document.createElement("div");
+
+        summary.id =
+            "dashboardSummary";
+
+
+        summary.innerHTML = `
+
+            <div class="summary-card">
+                <strong>${total}</strong>
+                <span>Total</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${newCount}</strong>
+                <span>New</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${contactedCount}</strong>
+                <span>Contacted</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${inProgressCount}</strong>
+                <span>In Progress</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${completedCount}</strong>
+                <span>Completed</span>
+            </div>
+
+            <div class="summary-card">
+                <strong>${archivedCount}</strong>
+                <span>Archived</span>
+            </div>
+
+        `;
+
+
+        const dashboardCard =
+            document.querySelector(
+                ".dashboard-card"
+            );
+
+
+        if (dashboardCard) {
+
+            dashboardCard.insertBefore(
+                summary,
+                inquiriesContainer
+            );
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * LOAD INQUIRIES
+     * =========================================================
+     */
+
+    async function loadInquiries() {
+
+        dashboardMessage.textContent =
+            "Loading inquiries...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/admin/inquiries`,
+                    {
+                        method: "GET",
+
+                        headers:
+                            getAuthHeaders()
+                    }
+                );
+
+
+            let result = {};
+
+            try {
+
+                result =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                result = {};
+            }
+
+
+            console.log(
+                "ADMIN INQUIRIES RESPONSE:",
+                result
+            );
+
+
+            /*
+             * Authentication failure
+             */
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                localStorage.removeItem(
+                    "admin_access_token"
+                );
+
+                localStorage.removeItem(
+                    "admin_token_type"
+                );
+
+                window.location.href =
+                    "admin.html";
+
+                return;
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.detail ||
+                    "Unable to load inquiries."
+                );
+            }
+
+
+            /*
+             * Make sure response is an array
+             */
+
+            if (!Array.isArray(result)) {
+
+                throw new Error(
+                    "Invalid inquiry data received from server."
+                );
+            }
+
+
+            dashboardMessage.textContent =
+                `${result.length} inquiries loaded.`;
+
+
+            createDashboardSummary(result);
+
+
+            /*
+             * No inquiries
+             */
+
+            if (result.length === 0) {
+
+                inquiriesContainer.innerHTML = `
+                    <p>No client inquiries found.</p>
+                `;
+
+                return;
+            }
+
+
+            inquiriesContainer.innerHTML =
+                "";
+
+
+            /*
+             * =================================================
+             * DISPLAY INQUIRIES
+             * =================================================
+             */
+
+            result.forEach(
+                (inquiry) => {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "inquiry-card";
+
+
+                    const fullName =
+                        `${inquiry.surname || ""} ${
+                            inquiry.othernames || ""
+                        }`.trim();
+
+
+                    const formattedDate =
+                        inquiry.created_at
+                            ? new Date(
+                                inquiry.created_at
+                            ).toLocaleString()
+                            : "N/A";
+
+
+                    card.innerHTML = `
+
+                        <div class="inquiry-header">
+
+                            <div>
+
+                                <h3>
+                                    ${
+                                        fullName ||
+                                        "Unnamed Client"
+                                    }
+                                </h3>
+
+                                <small>
+                                    Submitted:
+                                    ${formattedDate}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="inquiry-details">
+
+                            <p>
+                                <strong>Email:</strong>
+                                ${inquiry.email || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Phone:</strong>
+                                ${inquiry.phone || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Project Type:</strong>
+                                ${inquiry.project_type || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Budget:</strong>
+                                ${inquiry.budget || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                ${inquiry.location || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Timeline:</strong>
+                                ${inquiry.timeline || "N/A"}
+                            </p>
+
+                            <p>
+                                <strong>Comments:</strong>
+                                ${inquiry.comments || "N/A"}
+                            </p>
+
+                        </div>
+
+
+                        <div class="inquiry-actions">
+
+                            <label>
+
+                                <strong>Status:</strong>
+
+                                <select
+                                    class="status-select"
+                                    data-id="${inquiry.id}"
+                                >
+
+                                    <option
+                                        value="new"
+                                        ${
+                                            inquiry.status === "new"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        New
+                                    </option>
+
+                                    <option
+                                        value="contacted"
+                                        ${
+                                            inquiry.status === "contacted"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Contacted
+                                    </option>
+
+                                    <option
+                                        value="in_progress"
+                                        ${
+                                            inquiry.status === "in_progress"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        In Progress
+                                    </option>
+
+                                    <option
+                                        value="completed"
+                                        ${
+                                            inquiry.status === "completed"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Completed
+                                    </option>
+
+                                    <option
+                                        value="archived"
+                                        ${
+                                            inquiry.status === "archived"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Archived
+                                    </option>
+
+                                </select>
+
+                            </label>
+
+
+                            <button
+                                type="button"
+                                class="delete-inquiry-button"
+                                data-id="${inquiry.id}"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    inquiriesContainer.appendChild(
+                        card
+                    );
+                }
+            );
+
+
+            /*
+             * =================================================
+             * STATUS CHANGE
+             * =================================================
+             */
+
+            document
+                .querySelectorAll(
+                    ".status-select"
+                )
+                .forEach(
+                    (select) => {
+
+                        select.addEventListener(
+                            "change",
+                            async () => {
+
+                                const inquiryId =
+                                    select.dataset.id;
+
+                                const newStatus =
+                                    select.value;
+
+
+                                try {
+
+                                    select.disabled =
+                                        true;
+
+
+                                    const response =
+                                        await fetch(
+                                            `${API_BASE_URL}/admin/inquiries/${inquiryId}/status?new_status=${encodeURIComponent(newStatus)}`,
+                                            {
+                                                method:
+                                                    "PATCH",
+
+                                                headers:
+                                                    getAuthHeaders()
+                                            }
+                                        );
+
+
+                                    let result = {};
+
+                                    try {
+
+                                        result =
+                                            await response.json();
+
+                                    } catch (
+                                        jsonError
+                                    ) {
+
+                                        result = {};
+                                    }
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.detail ||
+                                            "Unable to update status."
+                                        );
+                                    }
+
+
+                                    console.log(
+                                        "STATUS UPDATED:",
+                                        result
+                                    );
+
+
+                                    await loadInquiries();
+
+
+                                } catch (error) {
+
+                                    console.error(
+                                        "Status update error:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
+                                        "Unable to update status."
+                                    );
+
+
+                                    await loadInquiries();
+                                }
+
+                            }
+                        );
+                    }
+                );
+
+
+            /*
+             * =================================================
+             * DELETE INQUIRY
+             * =================================================
+             */
+
+            document
+                .querySelectorAll(
+                    ".delete-inquiry-button"
+                )
+                .forEach(
+                    (button) => {
+
+                        button.addEventListener(
+                            "click",
+                            async () => {
+
+                                const inquiryId =
+                                    button.dataset.id;
+
+
+                                const confirmed =
+                                    confirm(
+                                        "Are you sure you want to delete this client inquiry?"
+                                    );
+
+
+                                if (!confirmed) {
+                                    return;
+                                }
+
+
+                                try {
+
+                                    button.disabled =
+                                        true;
+
+                                    button.textContent =
+                                        "Deleting...";
+
+
+                                    const response =
+                                        await fetch(
+                                            `${API_BASE_URL}/admin/inquiries/${inquiryId}`,
+                                            {
+                                                method:
+                                                    "DELETE",
+
+                                                headers:
+                                                    getAuthHeaders()
+                                            }
+                                        );
+
+
+                                    let result = {};
+
+                                    try {
+
+                                        result =
+                                            await response.json();
+
+                                    } catch (
+                                        jsonError
+                                    ) {
+
+                                        result = {};
+                                    }
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.detail ||
+                                            "Unable to delete inquiry."
+                                        );
+                                    }
+
+
+                                    console.log(
+                                        "INQUIRY DELETED:",
+                                        result
+                                    );
+
+
+                                    await loadInquiries();
+
+
+                                } catch (error) {
+
+                                    console.error(
+                                        "Delete error:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
+                                        "Unable to delete inquiry."
+                                    );
+
+
+                                    button.disabled =
+                                        false;
+
+                                    button.textContent =
+                                        "Delete";
+                                }
+
+                            }
+                        );
+                    }
+                );
+
+
+        } catch (error) {
+
+            console.error(
+                "Dashboard error:",
+                error
+            );
+
+
+            dashboardMessage.textContent =
+                error.message ||
+                "Unable to connect to server.";
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * START DASHBOARD
+     * =========================================================
+     */
 
     loadInquiries();
 
