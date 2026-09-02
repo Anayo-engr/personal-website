@@ -12,7 +12,7 @@
  * Replace this URL with the actual Render
  * backend URL when confirmed.
  */
-const API_BASE_URL = "YOUR_RENDER_BACKEND_URL";
+const API_BASE_URL = "https://nworie-personal-website-api.onrender.com";
 
 
 /*
