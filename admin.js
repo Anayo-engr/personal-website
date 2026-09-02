@@ -7,7 +7,7 @@
  */
 
 const API_BASE_URL =
-    "https://personal-website-uv7b.onrender.com";
+    "https://nworie-personal-website-api.onrender.com";
 
 
 /*

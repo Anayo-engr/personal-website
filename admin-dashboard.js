@@ -4,7 +4,7 @@
  * =========================================================
  */
 
-const API_BASE_URL = "https://personal-website-uv7b.onrender.com";
+const API_BASE_URL = "https://nworie-personal-website-api.onrender.com";
 
 
 document.addEventListener("DOMContentLoaded", () => {
